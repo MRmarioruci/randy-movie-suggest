@@ -1,18 +1,19 @@
 import { Redirect, Route } from 'react-router-dom';
 import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
+	IonApp,
+	IonIcon,
+	IonLabel,
+	IonRouterOutlet,
+	IonTabBar,
+	IonTabButton,
+	IonTabs,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle } from 'ionicons/icons';
-import Tab1 from './pages/Tab1';
-import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
+import { albums, add, shuffle, person } from 'ionicons/icons';
+import Suggest from './pages/Suggest';
+import Album from './pages/Album';
+import SubmitSuggestion from './pages/SubmitSuggestion';
+import Account from './pages/Account';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -32,42 +33,51 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import './theme/tabs.css';
+import './theme/main.css';
 
 const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/tab1">
-            <Tab1 />
-          </Route>
-          <Route exact path="/tab2">
-            <Tab2 />
-          </Route>
-          <Route path="/tab3">
-            <Tab3 />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/tab1" />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon icon={triangle} />
-            <IonLabel>Tab 1</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon icon={ellipse} />
-            <IonLabel>Tab 2</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon icon={square} />
-            <IonLabel>Tab 3</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
+	<IonApp>
+		<IonReactRouter>
+			<IonTabs>
+				<IonRouterOutlet>
+					<Route exact path="/suggest">
+						<Suggest />
+					</Route>
+					<Route exact path="/album">
+						<Album />
+					</Route>
+					<Route path="/submit">
+						<SubmitSuggestion />
+					</Route>
+					<Route path="/account">
+						<Account />
+					</Route>
+					<Route exact path="/">
+						<Redirect to="/suggest" />
+					</Route>
+				</IonRouterOutlet>
+				<IonTabBar slot="bottom" className="tabs">
+					<IonTabButton tab="suggest" href="/suggest">
+						<IonIcon icon={shuffle} />
+						<IonLabel>Find</IonLabel>
+					</IonTabButton>
+					<IonTabButton tab="album" href="/album">
+						<IonIcon icon={albums} />
+						<IonLabel>My list</IonLabel>
+					</IonTabButton>
+					<IonTabButton tab="submit" href="/submit">
+						<IonIcon icon={add} />
+						<IonLabel>Add</IonLabel>
+					</IonTabButton>
+					<IonTabButton tab="account" href="/account">
+						<IonIcon icon={person} />
+						<IonLabel>Me</IonLabel>
+					</IonTabButton>
+				</IonTabBar>
+			</IonTabs>
+		</IonReactRouter>
+	</IonApp>
 );
 
 export default App;
