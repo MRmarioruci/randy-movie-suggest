@@ -1,0 +1,8 @@
+{
+  "name": "Randy: Movie suggest",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react",
+  "id": "29b6adee"
+}
