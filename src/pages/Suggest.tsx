@@ -3,12 +3,12 @@ import { IonContent, IonPage, IonSlides, IonSlide, IonFab, IonFabButton, IonModa
 import './Suggest.css';
 import '../theme/main.css';
 import mainImage from '../images/download.jpeg';
-import filterIcon from '../images/icons/filter-results-button.svg';
+import filterIcon from '../images/icons/filter.png';
 
 const Suggest: React.FC = () => {
   const slideOpts = {
     initialSlide: 1,
-    speed: 400
+	speed: 400,
   };
   const [showModal, setShowModal] = useState(false);
 
@@ -30,13 +30,13 @@ const Suggest: React.FC = () => {
           		</IonSlide>
         	</IonSlides>
 			<IonFab vertical="bottom" horizontal="end" slot="fixed">
-				<IonFabButton color="success" onClick={ () => setShowModal(true)}>
+				<IonFabButton color="primary" onClick={ () => setShowModal(true)}>
 					<img src={filterIcon} className="action__icon"/>
 				</IonFabButton>
         	</IonFab>
 			<IonModal isOpen={showModal}>
 				<p>This is modal content</p>
-				<IonButton onClick={() => setShowModal(false)} color="success">Apply filters</IonButton>
+				<IonButton onClick={() => setShowModal(false)} color="primary">Apply filters</IonButton>
 			</IonModal>
       	</IonContent>
     </IonPage>
