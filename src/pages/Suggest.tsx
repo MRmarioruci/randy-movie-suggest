@@ -1,46 +1,76 @@
-import React, { useState } from 'react';
-import { IonContent, IonPage, IonSlides, IonSlide, IonFab, IonFabButton, IonModal, IonButton} from '@ionic/react';
+
+import React, { useState, useEffect, useContext } from 'react';
+import { IonToast, IonContent, IonPage, IonFab, IonFabButton, IonModal, IonButton} from '@ionic/react';
+import Slider from './parts/Slider';
 import './Suggest.css';
 import '../theme/main.css';
-import mainImage from '../images/download.jpeg';
-import filterIcon from '../images/icons/filter.png';
+import {AppContext, actions} from '../Provider';
 
 const Suggest: React.FC = () => {
-  const slideOpts = {
-    initialSlide: 1,
-	speed: 400,
-  };
-  const [showModal, setShowModal] = useState(false);
+	const { state, dispatch } = useContext(AppContext);
+	const [getting, setGetting] = useState(false);
+	const [showInstructions, setInstructions] = useState(false);
 
-  return (
-    <IonPage className="page__content">
-    	<IonContent fullscreen className="page__content">
-    		<IonSlides pager={true} options={slideOpts} className="slides">
-    			<IonSlide>
-					<img className="slide__image" src={mainImage}/>
-					<div className="slide__info">
-
+	const setFilterModal = (newVal:boolean) => {
+		dispatch({
+			type: actions.SET_FILTER_MODAL,
+			value: newVal
+		})
+	}
+	const get = async () => {
+		setGetting(true);
+		let o = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({})/* Extra params will be passed */
+		};
+		const response = await fetch('/get', o);
+		const {status,data} = await response.json();
+		if(status === 'ok'){
+			if(data){
+				let tmp = data.results.map( (title:any)  => {
+					return title
+				})
+				dispatch({
+					type: actions.SET_MOVIE_LIST,
+					value: tmp
+				})
+				setTimeout( () => {
+					setGetting(false);
+				}, 500);
+			}
+		}else{
+			setTimeout( () => {
+				setGetting(false);
+			}, 500);
+		}
+	}
+	useEffect( () => {
+		get();
+		setInstructions(true);
+	}, [])
+	return (
+		<IonPage className="page__content">
+			<IonContent fullscreen className="page__content">
+				{ !getting && <Slider getSlides={get} ></Slider>}
+				{ getting &&
+					<div className="lds-ring">
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
 					</div>
-          		</IonSlide>
-				<IonSlide>
-					<h1>Slide 2</h1>
-				</IonSlide>
-				<IonSlide>
-            		<h1>Slide 3</h1>
-          		</IonSlide>
-        	</IonSlides>
-			<IonFab vertical="bottom" horizontal="end" slot="fixed">
-				<IonFabButton color="primary" onClick={ () => setShowModal(true)}>
-					<img src={filterIcon} className="action__icon"/>
-				</IonFabButton>
-        	</IonFab>
-			<IonModal isOpen={showModal}>
-				<p>This is modal content</p>
-				<IonButton onClick={() => setShowModal(false)} color="primary">Apply filters</IonButton>
-			</IonModal>
-      	</IonContent>
-    </IonPage>
-  );
+				}
+				<IonToast
+					color={'primary'}
+					isOpen={showInstructions}
+					onDidDismiss={() => setInstructions(false)}
+					message="Swipe left to ignore, swipe right to add in your list."
+					duration={2500}
+				/>
+			</IonContent>
+		</IonPage>
+	);
 };
 
 export default Suggest;

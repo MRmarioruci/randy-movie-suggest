@@ -1,36 +1,42 @@
 import React, { ReactNode, createContext, useReducer } from 'react';
 interface IProps {
 	children: ReactNode;
-	// any other props that come into the component
 }
 const initialState = {
 	isLogged: false,
+	slideModal: false,
+	filterModal: false,
+	movieList: [],
 }
+const AppContext = createContext(initialState as any);
 const actions = {
 	SET_LOGIN: "SET_LOGIN",
+	SET_SLIDE_MODAL: "SET_SLIDE_MODAL",
+	SET_FILTER_MODAL: "SET_FILTER_MODAL",
+	SET_MOVIE_LIST: "SET_MOVIE_LIST",
 };
 function reducer(state:any, action:any) {
 	switch (action.type) {
 		case actions.SET_LOGIN:
 			return { ...state, isLogged: action.value };
+		case actions.SET_SLIDE_MODAL:
+			return { ...state, slideModal: action.value };
+		case actions.SET_FILTER_MODAL:
+			return { ...state, filterModal: action.value };
+		case actions.SET_MOVIE_LIST:
+			return { ...state, movieList: action.value };
 		default:
 			return state;
 	}
 }
-const AppContext = createContext(initialState);
-
 const Provider = ({ children, ...props }: IProps) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
-	const value = {
-		isLogged: false,
-	};
+	const value = { state, dispatch };
 	return (
-		<AppContext.Provider {...props} value={value}>
+		<AppContext.Provider value={value}>
 			{children}
 		</AppContext.Provider>
 	);
 };
-export default Provider
-
-	
+export {AppContext, Provider, actions}

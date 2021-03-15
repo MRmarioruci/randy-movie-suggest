@@ -1,4 +1,5 @@
 import { Redirect, Route } from 'react-router-dom';
+import React from 'react';
 import {
 	IonApp,
 	IonIcon,
@@ -14,7 +15,7 @@ import Suggest from './pages/Suggest';
 import Album from './pages/Album';
 import SubmitSuggestion from './pages/SubmitSuggestion';
 import Account from './pages/Account';
-import Provider from './Provider';
+import {Provider} from './Provider';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -43,7 +44,7 @@ const App: React.FC = () => (
 				<IonTabs>
 					<IonRouterOutlet>
 						<Route exact path="/suggest">
-							<Suggest />
+							<Suggest/>
 						</Route>
 						<Route exact path="/album">
 							<Album />
