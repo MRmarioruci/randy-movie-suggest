@@ -2,7 +2,8 @@ const colors = require('colors');
 const ERROR_CODES = {
     UNKNOWN_ERROR: 											{'status':'err', 'data':'UNKNOWN ERROR'},
     INVALID_PARAMS: 										{'status':'err', 'data':'INVALID PARAMETERS: '},
-    NOT_LOGGED: 										    {'status':'err', 'data':'NOT LOGGED'},
+	NOT_LOGGED: 										    {'status':'err', 'data':'NOT LOGGED'},
+	LOGGED: 										    	{'status':'err', 'data':'Already logged in'},/* For client */
     QUERY: 										            {'status':'err', 'data':'QUERY'},
 };
 module.exports = {

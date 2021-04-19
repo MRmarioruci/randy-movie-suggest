@@ -29,19 +29,22 @@ const Slider = ({ getSlides, ...props }: IProps) => {
 		}
 	};
 	const onSwipe = (direction:any) => {
-		if(direction == 'left'){
-			setDislikeMessage(true);
-			setTimeout( () => {
-				setDislikeMessage(false);
-			}, 500)
-		}else{
-			setLikeMessage(true);
-			setTimeout( () => {
-				setLikeMessage(false);
-			}, 500)
+		if(state.isLogged){
+			if(direction == 'left'){
+				setDislikeMessage(true);
+				setTimeout( () => {
+					setDislikeMessage(false);
+				}, 800)
+			}else{
+				setLikeMessage(true);
+				setTimeout( () => {
+					setLikeMessage(false);
+				}, 800)
+			}
 		}
 		index++;
 		if(index == 20){
+			/* Change page every 20 slides */
 			getSlides()
 			index = 0;
 		}

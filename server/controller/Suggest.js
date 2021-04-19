@@ -5,7 +5,7 @@ const mdb = require('moviedb')('4730bbd090c66e172fd302f1d02fc329');
 module.exports = {
 	run:function (router, CONNECTION){
 		router.post('/get',async (req,res) => {
-			let request = req.body;
+			let data = req.body;
 			let page = Math.floor(Math.random() * 500) + 1;
 			mdb.discoverMovie({
 				'page': page
@@ -16,14 +16,6 @@ module.exports = {
 					res.json( {status: 'ok', data: response} );
 				}
 			});
-			/* const data = await model.get(CONNECTION).catch( (err) => {
-				logger.log('error','QUERY', err);
-			})
-			if(data){
-
-			}else{
-				res.json(logger.getError('QUERY'));
-			} */
 		})
 	},
 }

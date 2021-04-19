@@ -10,27 +10,25 @@ const http = require("http").Server(app);
 const mysql = require('mysql');
 const router = express.Router();
 
-/**Local classes and utilities */
+/* Controllers */
 const controlSuggest = require('./controller/Suggest');
-//const RegistryClass = require('./classes/Registry');
-//const Registry = new RegistryClass();
-//const SocketHandler = require('./classes/Socket.js');
+const controlUser = require('./controller/User');
 
 /* Vars */
 const redisPort = 6379;
 const port = 5005;
 const dbConfig = {
 	connectionLimit : 10,
-	host     : 'localhost',//process.env.SQL_HOST,
-	user     : 'mario',//process.env.SQL_USER,
-	password : 'smilemalaka',//process.env.SQL_PASSWORD,
-	database : 'randy',//process.env.SQL_DATABASE,
+	host     : process.env.SQL_HOST,
+	user     : process.env.SQL_USER,
+	password : process.env.SQL_PASSWORD,
+	database : process.env.SQL_DATABASE,
 	charset  : 'utf8mb4'
 };
 const CONNECTION = mysql.createPool(dbConfig);
 
 app.get('/', (req,res)=>{
-	res.json('Hello');
+	res.json(`Hey... You shouldn't be here`);
 })
 app.use(session({
     secret: 'secret',
@@ -44,6 +42,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 http.listen(port,() => {
 	console.log(`Server started on port ${port}`);
 	controlSuggest.run(app, CONNECTION);
+	controlUser.run(app, CONNECTION);
 })
 process.on('SIGTERM', function () {
 	process.exit(0);

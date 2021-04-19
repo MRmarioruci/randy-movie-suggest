@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect, useContext } from 'react';
-import { IonToast, IonContent, IonPage, IonFab, IonFabButton, IonModal, IonButton} from '@ionic/react';
+import React, { useState, useEffect, useContext, Component } from 'react';
+import { IonToast, IonContent, IonPage, IonFab, IonFabButton, IonModal, IonButton, IonIcon} from '@ionic/react';
 import Slider from './parts/Slider';
 import './Suggest.css';
 import '../theme/main.css';
@@ -11,12 +11,6 @@ const Suggest: React.FC = () => {
 	const [getting, setGetting] = useState(false);
 	const [showInstructions, setInstructions] = useState(false);
 
-	const setFilterModal = (newVal:boolean) => {
-		dispatch({
-			type: actions.SET_FILTER_MODAL,
-			value: newVal
-		})
-	}
 	const get = async () => {
 		setGetting(true);
 		let o = {
@@ -65,7 +59,7 @@ const Suggest: React.FC = () => {
 					color={'primary'}
 					isOpen={showInstructions}
 					onDidDismiss={() => setInstructions(false)}
-					message="Swipe left to ignore, swipe right to add in your list."
+					message="Swipe left to ignore, swipe right to add in your list.(This will only work if you have logged in to your account)"
 					duration={2500}
 				/>
 			</IonContent>

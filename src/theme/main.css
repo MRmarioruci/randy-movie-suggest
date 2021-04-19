@@ -37,3 +37,32 @@
 		transform: rotate(360deg);
 	}
 }
+.fnt_20{
+	font-size: 2rem;
+}
+.label{
+	line-height: 1.5rem;
+	font-weight: bold;
+}
+.contain__page{
+	padding: 1rem;
+}
+.mt20{
+	margin-top: 20px;
+}
+.label__link{
+	color: #61b1f2;
+	text-decoration: underline;
+}
+.text__center{
+	text-align: center;
+}
+.account__image{
+	width: 150px;
+	margin: auto;
+	text-align: center;
+}
+.error__message{
+	font-weight: bold;
+	color: rgb(253, 109, 109);
+}

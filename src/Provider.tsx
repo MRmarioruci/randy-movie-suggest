@@ -4,8 +4,6 @@ interface IProps {
 }
 const initialState = {
 	isLogged: false,
-	slideModal: false,
-	filterModal: false,
 	movieList: [],
 }
 const AppContext = createContext(initialState as any);
@@ -19,10 +17,6 @@ function reducer(state:any, action:any) {
 	switch (action.type) {
 		case actions.SET_LOGIN:
 			return { ...state, isLogged: action.value };
-		case actions.SET_SLIDE_MODAL:
-			return { ...state, slideModal: action.value };
-		case actions.SET_FILTER_MODAL:
-			return { ...state, filterModal: action.value };
 		case actions.SET_MOVIE_LIST:
 			return { ...state, movieList: action.value };
 		default:

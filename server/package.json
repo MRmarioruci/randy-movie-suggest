@@ -9,6 +9,7 @@
   "author": "Mario Ruci",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "connect-redis": "^5.1.0",
     "express-session": "^1.17.1",
     "moviedb": "^0.2.10",
