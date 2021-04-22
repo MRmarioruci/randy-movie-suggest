@@ -43,8 +43,12 @@ const Register = ({ togglePage, ...props }: IProps) => {
 			}
 			const res = await fetch('/register', o);
 			const {status, data} = await res.json();
+			console.log(status);
 			if(status == 'ok'){
-
+				dispatch({
+					type: actions.SET_LOGIN,
+					value: true
+				})
 			}else{
 				console.log(data);
 				setError([]);
@@ -53,37 +57,6 @@ const Register = ({ togglePage, ...props }: IProps) => {
 			setError(err);
 		}
 	}
-	const get = async () => {
-		/* setGetting(true);
-		let o = {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({})
-		};
-		const response = await fetch('/get', o);
-		const {status,data} = await response.json();
-		if(status === 'ok'){
-			if(data){
-				let tmp = data.results.map( (title:any)  => {
-					return title
-				})
-				dispatch({
-					type: actions.SET_MOVIE_LIST,
-					value: tmp
-				})
-				setTimeout( () => {
-					setGetting(false);
-				}, 500);
-			}
-		}else{
-			setTimeout( () => {
-				setGetting(false);
-			}, 500);
-		} */
-	}
-	useEffect( () => {
-		//get();
-	}, [])
 	return (
 		<div className="contain__page">
 			<div className="text__center">

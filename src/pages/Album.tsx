@@ -10,17 +10,19 @@ const Album: React.FC = () => {
 	const { state, dispatch } = useContext(AppContext);
 
 	const get = async () => {
-		/* setGetting(true);
+		if(!state.isLogged) return false;
+
 		let o = {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({})
 		};
-		const response = await fetch('/get', o);
+		const response = await fetch('/getList', o);
 		const {status,data} = await response.json();
 		if(status === 'ok'){
 			if(data){
-				let tmp = data.results.map( (title:any)  => {
+				console.log(data);
+				/* let tmp = data.results.map( (title:any)  => {
 					return title
 				})
 				dispatch({
@@ -29,17 +31,17 @@ const Album: React.FC = () => {
 				})
 				setTimeout( () => {
 					setGetting(false);
-				}, 500);
+				}, 500); */
 			}
 		}else{
-			setTimeout( () => {
+			/* setTimeout( () => {
 				setGetting(false);
-			}, 500);
-		} */
+			}, 500); */
+		}
 	}
 	useEffect( () => {
-		//get();
-	}, [])
+		get();
+	})
 	return (
 		<IonPage className="page__content">
 			<IonContent fullscreen className="page__content">

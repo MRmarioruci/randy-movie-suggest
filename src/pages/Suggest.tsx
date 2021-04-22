@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect, useContext, Component } from 'react';
-import { IonToast, IonContent, IonPage, IonFab, IonFabButton, IonModal, IonButton, IonIcon} from '@ionic/react';
+import React, { useState, useEffect, useContext } from 'react';
+import { IonToast, IonContent, IonPage} from '@ionic/react';
 import Slider from './parts/Slider';
 import './Suggest.css';
 import '../theme/main.css';

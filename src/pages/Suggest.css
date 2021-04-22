@@ -105,3 +105,18 @@
 	font-weight: bold;
 	font-size: 16px;
 }
+.swipe__more{
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	z-index: 999;
+	text-transform: capitalize;
+}
+.swipe__overview .modal-wrapper {
+	background: rgba(0, 0, 0, 0.6) !important;
+	padding: 15px;
+	color: #fff;
+}
+.mg-10{
+	margin: 25px;
+}

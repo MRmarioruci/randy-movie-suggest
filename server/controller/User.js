@@ -8,7 +8,7 @@ module.exports = {
 
 			let data = req.body;
 			model.register(data.name, data.email, data.password, CONNECTION)
-			.then( (data) => {
+			.then( (d) => {
 				req.session.email = data.email;
 				res.json( {status: 'ok', data: data.email} );
 			})
@@ -19,29 +19,47 @@ module.exports = {
 		router.post('/login',async (req,res) => {
 			let data = req.body;
 			model.login(data.email, data.password, CONNECTION)
-			.then( (data) => {
-				/* req.session.email = data.email;
-				res.json( {status: 'ok', data: data.email} ); */
+			.then( (d) => {
+				req.session.email = data.email;
+				res.json( {status: 'ok', data: data.email} );
 			})
 			.catch( (err) => {
 				res.json( {status: 'err', data: err} );
 			})
-		/* 	let page = Math.floor(Math.random() * 500) + 1;
-			mdb.discoverMovie({
-				'page': page
-			}, (err, response) => {
-				if(err){
-					//logger.log('error','QUERY', err);
-				}else{
-					res.json( {status: 'ok', data: response} );
-				}
-			}); */
 		})
-		router.post('/isLogged',async (req,res) => {
+		router.post('/isLogged',(req,res) => {
 			if(req.session.email){
 				res.json({ status: 'ok', data: true});
 			}else{
-				res.json({ status: 'err', data: false});
+				res.json(logger.getError('NOT_LOGGED'));
+			}
+		})
+		router.post('/addToList',(req,res) => {
+			if(req.session.email){
+				let data = req.body;
+				model.addToList(req.session.email, data.id, CONNECTION)
+				.then( (d) => {
+					res.json({status: 'ok', data: true});
+				})
+				.catch( (err) => {
+					res.json(logger.getError('UNKNOWN_ERROR'));
+				})
+			}else{
+				res.json(logger.getError('NOT_LOGGED'));
+			}
+		})
+		router.post('/getList',(req,res) => {
+			if(req.session.email){
+				let data = req.body;
+				model.getList(req.session.email, CONNECTION)
+				.then( (d) => {
+					res.json({status: 'ok', data: d});
+				})
+				.catch( (err) => {
+					res.json(logger.getError('UNKNOWN_ERROR'));
+				})
+			}else{
+				res.json(logger.getError('NOT_LOGGED'));
 			}
 		})
 	},

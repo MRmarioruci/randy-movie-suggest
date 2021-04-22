@@ -19,10 +19,10 @@ const redisPort = 6379;
 const port = 5005;
 const dbConfig = {
 	connectionLimit : 10,
-	host     : process.env.SQL_HOST,
-	user     : process.env.SQL_USER,
-	password : process.env.SQL_PASSWORD,
-	database : process.env.SQL_DATABASE,
+	host     : 'localhost',//process.env.SQL_HOST,
+	user     : 'mario',//process.env.SQL_USER,
+	password : 'smilemalaka',//process.env.SQL_PASSWORD,
+	database : 'randy',//process.env.SQL_DATABASE,
 	charset  : 'utf8mb4'
 };
 const CONNECTION = mysql.createPool(dbConfig);

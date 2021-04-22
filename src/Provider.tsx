@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useReducer } from 'react';
+import React, { ReactNode, createContext, useReducer, useEffect } from 'react';
 interface IProps {
 	children: ReactNode;
 }
@@ -25,8 +25,30 @@ function reducer(state:any, action:any) {
 }
 const Provider = ({ children, ...props }: IProps) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
-
 	const value = { state, dispatch };
+	const isLogged = async () => {
+		let o = {
+			method : 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({})
+		}
+		const res = await fetch('/isLogged', o);
+		const {status, data} = await res.json();
+		if(status == 'ok'){
+			dispatch({
+				type: actions.SET_LOGIN,
+				value: true
+			})
+		}else{
+			dispatch({
+				type: actions.SET_LOGIN,
+				value: false
+			})
+		}
+	}
+	useEffect( () => {
+		isLogged();
+	}, [])
 	return (
 		<AppContext.Provider value={value}>
 			{children}

@@ -12,43 +12,38 @@ const Login = ({ togglePage, ...props }: IProps) => {
 	const { state, dispatch } = useContext(AppContext);
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [error, setError] = useState('');
+	const [error, setError] = useState([]);
 	const login = async () => {
-		setError('');
-		setError('This account does not exist');
-		console.log('Logging in');
-	}
-	const get = async () => {
-		/* setGetting(true);
-		let o = {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({})
-		};
-		const response = await fetch('/get', o);
-		const {status,data} = await response.json();
-		if(status === 'ok'){
-			if(data){
-				let tmp = data.results.map( (title:any)  => {
-					return title
+		setError([])
+		let err = [] as any;
+
+		if(!password) err.push('Please fill in the password field');
+		if(!email) err.push('Please fill in the email field');
+
+		if(err.length == 0){
+			let o = {
+				method : 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					email: email,
+					password: password
 				})
+			}
+			const res = await fetch('/login', o);
+			const {status, data} = await res.json();
+			if(status == 'ok'){
 				dispatch({
-					type: actions.SET_MOVIE_LIST,
-					value: tmp
+					type: actions.SET_LOGIN,
+					value: true
 				})
-				setTimeout( () => {
-					setGetting(false);
-				}, 500);
+			}else{
+				console.log(data);
+				setError([]);
 			}
 		}else{
-			setTimeout( () => {
-				setGetting(false);
-			}, 500);
-		} */
+			setError(err);
+		}
 	}
-	useEffect( () => {
-		//get();
-	}, [])
 	return (
 		<div className="contain__page">
 			<div className="text__center">
@@ -67,7 +62,12 @@ const Login = ({ togglePage, ...props }: IProps) => {
 				</IonItem>
 			</div>
 			<div className="mt20">
-				{ error && <div className="error__message">{error}</div>}
+				{
+					error.length > 0 &&
+					error.map( (err:any, i:any) => {
+						return <div key={i} className="error__message">{err}</div>
+					})
+				}
 			</div>
 			<div className="mt20">
 				<IonButton expand="full" onClick={login} shape="round" color="primary">Login</IonButton>
