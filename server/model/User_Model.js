@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const { resolve } = require('path');
 const logger = require('../utils/logger.js');
+const mdb = require('moviedb')('4730bbd090c66e172fd302f1d02fc329');
 
 module.exports = {
 	register: (name, email, password, CONNECTION) => {
@@ -55,7 +56,8 @@ module.exports = {
 			const q = '\
 				SELECT \
 					`Users`.`id`, \
-					`Users`.`password` \
+					`Users`.`password`, \
+					`Users`.`email` \
 				FROM `Users`\
 				WHERE `Users`.`email` = ?\
 			';
@@ -97,12 +99,49 @@ module.exports = {
 				JOIN `Users` ON `UserMovieList`.`user_id` = `Users`.`id`\
 				WHERE `Users`.`email` = ?\
 			';
-			CONNECTION.query(q, [email], (err, res) => {
+			CONNECTION.query(q, [email],async (err, res) => {
 				if(err){
 					logger.log('error','QUERY', err);
 					reject(err);
 				}else{
+					let out = [];
+					for(let i = 0; i < res.length; i++){
+						out.push({
+							'id': res[i]['id'],
+							'movieInfo': await module.exports.getMovie(res[i]['movie_id']).catch( (e) => { logger.log('error','QUERY', e); })
+						})
+					}
+					resolve(out);
+				}
+			})
+		})
+	},
+	getMovie: (movie_id) => {
+		return new Promise( (resolve, reject) => {
+			mdb.movieInfo({ id: movie_id }, (err, res) => {
+				if(err){
+					reject(err);
+				}else{
 					resolve(res);
+				}
+			});
+		})
+	},
+	deleteListItem: (email, item_id, CONNECTION) => {
+		return new Promise( (resolve, reject) => {
+			const q = '\
+				DELETE `UserMovieList`\
+				FROM `UserMovieList`\
+				JOIN `Users` ON `Users`.`id` = `UserMovieList`.`user_id`\
+				WHERE `Users`.`email` = ?\
+				AND `UserMovieList`.`id` = ?\
+			';
+			CONNECTION.query(q, [email, item_id],async (err, res) => {
+				if(err){
+					logger.log('error','QUERY', err);
+					reject(err);
+				}else{
+					resolve(true);
 				}
 			})
 		})

@@ -40,10 +40,6 @@ const Slider = ({ getSlides, ...props }: IProps) => {
 						setTimeout( () => {
 							setLikeMessage(false);
 						}, 800)
-					/* 	dispatch({
-							type: actions.SET_LOGIN,
-							value: true
-						}) */
 					}else{
 						console.log(data);
 					}

@@ -7,12 +7,14 @@ const redis = require('redis');
 const redisStore = require('connect-redis')(session);
 const redisClient  = redis.createClient();
 const http = require("http").Server(app);
+const io = require('socket.io')(http);
 const mysql = require('mysql');
 const router = express.Router();
 
 /* Controllers */
 const controlSuggest = require('./controller/Suggest');
 const controlUser = require('./controller/User');
+const controlChat = require('./controller/Chat');
 
 /* Vars */
 const redisPort = 6379;
@@ -21,7 +23,7 @@ const dbConfig = {
 	connectionLimit : 10,
 	host     : 'localhost',//process.env.SQL_HOST,
 	user     : 'mario',//process.env.SQL_USER,
-	password : 'smilemalaka',//process.env.SQL_PASSWORD,
+	password : '',//process.env.SQL_PASSWORD,
 	database : 'randy',//process.env.SQL_DATABASE,
 	charset  : 'utf8mb4'
 };
@@ -38,11 +40,17 @@ app.use(session({
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-
 http.listen(port,() => {
 	console.log(`Server started on port ${port}`);
-	controlSuggest.run(app, CONNECTION);
-	controlUser.run(app, CONNECTION);
+	io.on('connection', socket => {
+		console.log('Connected to websockets');
+		socket.on('event', data => { /* … */ });
+		socket.on('disconnect', () => { /* … */ });
+
+		controlSuggest.run(app, socket, CONNECTION);
+		controlUser.run(app, socket, CONNECTION);
+		controlChat.run(app, socket, CONNECTION);
+	});
 })
 process.on('SIGTERM', function () {
 	process.exit(0);

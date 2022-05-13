@@ -1,10 +1,17 @@
 import React, { ReactNode, createContext, useReducer, useEffect } from 'react';
+import socketIOClient from "socket.io-client";
+const ENDPOINT = ":8100";
+const socket = socketIOClient(ENDPOINT);
 interface IProps {
 	children: ReactNode;
 }
 const initialState = {
 	isLogged: false,
 	movieList: [],
+	album: [],
+	messages: [],
+	toolbar: true,
+	socket: socket
 }
 const AppContext = createContext(initialState as any);
 const actions = {
@@ -12,6 +19,9 @@ const actions = {
 	SET_SLIDE_MODAL: "SET_SLIDE_MODAL",
 	SET_FILTER_MODAL: "SET_FILTER_MODAL",
 	SET_MOVIE_LIST: "SET_MOVIE_LIST",
+	SET_ALBUM_LIST: "SET_ALBUM_LIST",
+	SET_TOOLBAR: "SET_TOOLBAR",
+	SET_MESSAGES: "SET_MESSAGES",
 };
 function reducer(state:any, action:any) {
 	switch (action.type) {
@@ -19,6 +29,12 @@ function reducer(state:any, action:any) {
 			return { ...state, isLogged: action.value };
 		case actions.SET_MOVIE_LIST:
 			return { ...state, movieList: action.value };
+		case actions.SET_ALBUM_LIST:
+			return { ...state, album: action.value };
+		case actions.SET_TOOLBAR:
+			return { ...state, toolbar: action.value };
+		case actions.SET_MESSAGES:
+			return { ...state, messages: action.value };
 		default:
 			return state;
 	}

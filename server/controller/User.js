@@ -2,7 +2,7 @@ const model = require('../model/User_Model.js');
 const logger = require('../utils/logger.js');
 
 module.exports = {
-	run:function (router, CONNECTION){
+	run:function (router, socket, CONNECTION){
 		router.post('/register',async (req,res) => {
 			if(req.session.email) return res.json( logger.getError('LOGGED') );
 
@@ -52,6 +52,20 @@ module.exports = {
 			if(req.session.email){
 				let data = req.body;
 				model.getList(req.session.email, CONNECTION)
+				.then( (d) => {
+					res.json({status: 'ok', data: d});
+				})
+				.catch( (err) => {
+					res.json(logger.getError('UNKNOWN_ERROR'));
+				})
+			}else{
+				res.json(logger.getError('NOT_LOGGED'));
+			}
+		})
+		router.post('/deleteListItem',(req,res) => {
+			if(req.session.email){
+				let data = req.body;
+				model.deleteListItem(req.session.email, data.item_id, CONNECTION)
 				.then( (d) => {
 					res.json({status: 'ok', data: d});
 				})

@@ -1,89 +1,98 @@
-import { Redirect, Route } from 'react-router-dom';
-import React from 'react';
-import {
-	IonApp,
-	IonIcon,
-	IonLabel,
-	IonRouterOutlet,
-	IonTabBar,
-	IonTabButton,
-	IonTabs,
-} from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { albums, add, shuffle, person } from 'ionicons/icons';
-import Suggest from './pages/Suggest';
-import Album from './pages/Album';
-import SubmitSuggestion from './pages/SubmitSuggestion';
-import Account from './pages/Account';
-import {Provider} from './Provider';
-
-/* Core CSS required for Ionic components to work properly */
-import '@ionic/react/css/core.css';
-
-/* Basic CSS for apps built with Ionic */
-import '@ionic/react/css/normalize.css';
-import '@ionic/react/css/structure.css';
-import '@ionic/react/css/typography.css';
-
-/* Optional CSS utils that can be commented out */
-import '@ionic/react/css/padding.css';
-import '@ionic/react/css/float-elements.css';
-import '@ionic/react/css/text-alignment.css';
-import '@ionic/react/css/text-transformation.css';
-import '@ionic/react/css/flex-utils.css';
-import '@ionic/react/css/display.css';
-
-/* Theme variables */
-import './theme/variables.css';
-import './theme/tabs.css';
-import './theme/main.css';
-
-const App: React.FC = () => {
-	return (
-		<Provider>
-			<IonApp>
-				<IonReactRouter>
-					<IonTabs>
-						<IonRouterOutlet>
-							<Route exact path="/suggest">
-								<Suggest/>
-							</Route>
-							<Route exact path="/album">
-								<Album />
-							</Route>
-							<Route path="/submit">
-								<SubmitSuggestion />
-							</Route>
-							<Route path="/account">
-								<Account />
-							</Route>
-							<Route exact path="/">
-								<Redirect to="/suggest" />
-							</Route>
-						</IonRouterOutlet>
-						<IonTabBar slot="bottom" className="tabs">
-							<IonTabButton tab="suggest" href="/suggest">
-								<IonIcon icon={shuffle} />
-								<IonLabel>Find</IonLabel>
-							</IonTabButton>
-							<IonTabButton tab="album" href="/album">
-								<IonIcon icon={albums} />
-								<IonLabel>My list</IonLabel>
-							</IonTabButton>
-							<IonTabButton tab="submit" href="/submit">
-								<IonIcon icon={add} />
-								<IonLabel>Add</IonLabel>
-							</IonTabButton>
-							<IonTabButton tab="account" href="/account">
-								<IonIcon icon={person} />
-								<IonLabel>Me</IonLabel>
-							</IonTabButton>
-						</IonTabBar>
-					</IonTabs>
-				</IonReactRouter>
-			</IonApp>
-		</Provider>
-	);
-}
-
-export default App;
+class UserList extends React.Component {
+	constructor(props) {
+	  super(props)
+	  this.state = {
+		users: [],
+		currentUser: null
+	  }
+	}
+	selectUser(user){
+		this.setState({
+		  currentUser: user
+	  })
+	}
+	getUsers(){
+		fetch('https://randomuser.me/api/?results=5')
+	  .then(response => response.json())
+	  .then(data => {
+		  const results = data.results;
+		if(results.length > 0){
+			this.setState({
+			  users: [...this.state.users,...results]
+		  })
+		}else{
+			console.warn('No users returned');
+		}
+	  })
+	  .catch(function (err) {
+		// There was an error
+		console.warn('Something went wrong.', err);
+	  });
+	}
+	componentDidMount(){
+		this.getUsers();
+	}
+	render() {
+	  return ( 
+		  <div>
+		  <div className="list">
+			<h1>Users</h1>
+			{ this.state.users.map( (user, index) => {
+			  return (
+				<div className="list__user"  key={index} onClick={ () => this.selectUser(user)}>
+				  <div className={user.gender == 'male' ? 'list__user-image list__user-male' : 'list__user-image list__user-female'}>
+					<img src={user.picture.medium}/>
+				  </div>
+				  <div className="list__user-info">
+					<div className="list__user-title">{user.name.title}</div>
+					<div className="list__user-name">{`${user.name.first} ${user.name.last}`}</div>
+					<div className="list__user-more">
+					  Learn more
+					  <span className="material-icons">
+						arrow_right_alt
+					  </span>
+					</div>
+				  </div>
+				</div>
+			  )
+			}) }
+		   <button className="button button__primary" onClick={ () => this.getUsers() }>+5  users</button>
+		  </div>
+		  {
+			  this.state.currentUser &&
+			<div className="custom__modal">
+			  <div className="custom__modal-content">
+				<span className="material-icons user__close" onClick={ () => this.selectUser(null)}>
+				  close
+				</span>
+				<img src={this.state.currentUser.picture.large} className="user__image"/>
+				<div className="user__info">
+				  <div className="list__user-title">{this.state.currentUser.name.title}</div>
+				  <div className="list__user-name">{`${this.state.currentUser.name.first} ${this.state.currentUser.name.last}`}</div>
+				  <div className="user__info-item">
+					<label>Email</label>
+					<div className="user__info-label">{this.state.currentUser.email}</div>
+				  </div>
+				  <div className="user__info-item">
+					<label>Gender</label>
+					<div className="user__info-label">{this.state.currentUser.gender}</div>
+				  </div>
+				  <div className="user__info-item">
+					<label>Phone</label>
+					<div className="user__info-label">{this.state.currentUser.phone}</div>
+				  </div>
+				  <div className="user__info-item">
+					<button className="button" onClick={ () => this.selectUser(null)}>
+					  Close
+					</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+		  }
+		</div>
+	  )
+	}
+  }
+  
+  ReactDOM.render( < UserList / > , document.querySelector("#app"))
